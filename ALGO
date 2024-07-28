@@ -1,0 +1,61 @@
+import java.util.HashMap;
+import java.util.Map;
+
+class TrieNode {
+    Map<Character, TrieNode> children = new HashMap<>();
+    boolean isEndOfWord = false;
+}
+
+class Trie {
+    private TrieNode root;
+
+    public Trie() {
+        root = new TrieNode();
+    }
+
+    public void insert(String word) {
+        TrieNode node = root;
+        for (char c : word.toCharArray()) {
+            node.children.putIfAbsent(c, new TrieNode());
+            node = node.children.get(c);
+        }
+        node.isEndOfWord = true;
+    }
+
+    public boolean search(String word) {
+        TrieNode node = root;
+        for (char c : word.toCharArray()) {
+            node = node.children.get(c);
+            if (node == null) {
+                return false;
+            }
+        }
+        return node.isEndOfWord;
+    }
+
+    public boolean startsWith(String prefix) {
+        TrieNode node = root;
+        for (char c : prefix.toCharArray()) {
+            node = node.children.get(c);
+            if (node == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+public class TrieExample {
+    public static void main(String[] args) {
+        Trie trie = new Trie();
+        trie.insert("apple");
+        trie.insert("app");
+        trie.insert("application");
+
+        System.out.println(trie.search("app"));         // true
+        System.out.println(trie.search("apple"));       // true
+        System.out.println(trie.search("application")); // true
+        System.out.println(trie.search("apply"));       // false
+        System.out.println(trie.startsWith("app"));     // true
+    }
+}
